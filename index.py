@@ -1,12 +1,9 @@
-from dash import Dash, html, dcc, callback, Output, Input
+from dash import html, dcc, callback, Output, Input
 import plotly.express as px
-import pandas as pd
-import dash_mantine_components as dmc
 import dash_bootstrap_components as dbc
 import plotly.graph_objects as go
 
-from modul import pie_fig, bar_fig, colors
-
+from modul import pie_fig, colors
 from app import app
 from data import games
 from modul import genre_sales, sum_sales_of_plat, mean_critic_score, count_games
@@ -20,7 +17,13 @@ from modul import genre_sales, sum_sales_of_plat, mean_critic_score, count_games
 def update_graph(value):
     df = games[games.platform == value]
 
-    return px.histogram(df, x='year_of_release', y='total_sales', histfunc = 'sum', title='Сумма продаж каждой платформы по годам')
+    return px.histogram(
+        df, 
+        x='year_of_release', 
+        y='total_sales', 
+        histfunc = 'sum', 
+        title='Сумма продаж каждой платформы по годам'
+        )
 
 
 @callback(
@@ -30,7 +33,12 @@ def update_graph(value):
 def update_graph(value):
     df = games[games.platform == value].groupby(['year_of_release']).agg({'name': 'count'})
     df = df.rename(columns={'name': 'count_of_games'})
-    return px.line(df, x=df.index, y='count_of_games', title='Изменение количества проданных игр по каждой платформе с течением времени')
+    return px.line(
+        df, 
+        x=df.index, 
+        y='count_of_games', 
+        title='Изменение количества проданных игр по каждой платформе с течением времени'
+        )
 
 @callback(
     Output('graph2', 'figure'),
@@ -38,13 +46,20 @@ def update_graph(value):
 )
 def update_graph(value):
     df = genre_sales
-    bar_fig = px.bar(genre_sales, x = genre_sales.index, y = value, color = genre_sales.index, color_discrete_sequence=colors, title = 'Количество продаж по жанрам')
+    bar_fig = px.bar(
+        genre_sales, 
+        x = genre_sales.index, 
+        y = value, color = genre_sales.index, 
+        color_discrete_sequence=colors, title = 'Количество продаж по жанрам'
+        )
     bar_fig.update_layout(xaxis ={"categoryorder":"total descending"})
 
 
     return bar_fig
 
+#Индикаторы
 
+#Cумма продаж платформы и разница с большим
 @callback(
     Output('ind1', 'figure'),
     Input('dropdown0', 'value')
@@ -54,15 +69,14 @@ def update_graph(value):
             mode = "number+delta",
             value = sum_sales_of_plat.loc[value, 'total_sales'],
             delta = {"reference": sum_sales_of_plat['total_sales'].max(), "valueformat": ".0f"},
-            #title = {"text": "Users online"},
-            #domain = {'y': [0, 1], 'x': [0.25, 0.75]})
             ))
     fig.update_layout(
         paper_bgcolor="#E7EBFD",
-        height=250,  # Added parameter
+        height=250,
     )
     return fig
 
+#Средняя оценка критиков
 @callback(
     Output('ind2', 'figure'),
     Input('dropdown0', 'value')
@@ -76,11 +90,11 @@ def update_graph(value):
 
     fig.update_layout(
         paper_bgcolor="#E7EBFD",
-        height=250,  # Added parameter
+        height=250,
     )
     return fig
 
-
+#Сумма игр на платформе и разница с большим
 @callback(
     Output('ind3', 'figure'),
     Input('dropdown1', 'value')
@@ -107,11 +121,10 @@ def switch_tab(at):
                     [dbc.Card(
                         dbc.CardBody(
                             [
-                                html.H6("Cумму продаж платформы и разница с большим", className="card-subtitle"),
+                                html.H6("Cумма продаж платформы и разница с большей", className="card-subtitle"),
                                 dcc.Graph(id='ind1'),
                             ]
                         ),
-                        style={"width": "18rem"},
                     ),
                     dbc.Card(
                         dbc.CardBody(
@@ -120,7 +133,6 @@ def switch_tab(at):
                                 dcc.Graph(id='ind2'),
                             ]
                         ),
-                        style={"width": "18rem"},
                     ),
                     ]),
                 dcc.Graph(id='graph0'),
@@ -131,11 +143,10 @@ def switch_tab(at):
                 [dbc.Card(
                     dbc.CardBody(
                         [
-                            html.H6("Сумма игр на платформе и разница с большим", className="card-subtitle"),
+                            html.H6("Сумма игр на платформе и разница с большей", className="card-subtitle"),
                             dcc.Graph(id='ind3'),
                         ]
                     ),
-                    style={"width": "18rem"},
                 ),]),
                 dcc.Graph(id='graph1')]
     elif at == "tab-3":
@@ -155,9 +166,6 @@ def switch_tab(at):
             inline=True,
         ), dcc.Graph(id='graph2')]
         
-
-
-
 
 
 if __name__ == '__main__':

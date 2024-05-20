@@ -1,23 +1,10 @@
-from dash import html, dcc
-#import dash_mantine_components as dmc
+from dash import html
 import dash_bootstrap_components as dbc
 
 
 from data import games
 from modul import pie_fig, bar_fig
 
-'''
-general_layout = html.Div([
-    html.H1(children='Games dashboard', style={'textAlign':'center'}),
-    html.H4(children='Сумма продаж каждой платформы по годам', style={'textAlign':'left'}),
-    dcc.Dropdown(games.platform.unique(), games.platform.unique()[0], id='dropdown0'),
-    dcc.Graph(id='graph0'),
-    dcc.Dropdown(games.platform.unique(), games.platform.unique()[0], id='dropdown1'),
-    dcc.Graph(id='graph1'),
-    dcc.Graph(figure= pie_fig),
-    dcc.Graph(figure= bar_fig),
-])
-'''
 
 general_layout = html.Div(
     [
