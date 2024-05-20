@@ -9,7 +9,7 @@ from modul import pie_fig, bar_fig, colors
 
 from app import app
 from data import games
-from modul import genre_sales, mean_sales_of_plat, mean_critic_score, count_games
+from modul import genre_sales, sum_sales_of_plat, mean_critic_score, count_games
 
 
 
@@ -52,14 +52,14 @@ def update_graph(value):
 def update_graph(value):
     fig = go.Figure(go.Indicator(
             mode = "number+delta",
-            value = mean_sales_of_plat.loc[value, 'total_sales'],
-            delta = {"reference": mean_sales_of_plat['total_sales'].max(), "valueformat": ".0f"},
+            value = sum_sales_of_plat.loc[value, 'total_sales'],
+            delta = {"reference": sum_sales_of_plat['total_sales'].max(), "valueformat": ".0f"},
             #title = {"text": "Users online"},
             #domain = {'y': [0, 1], 'x': [0.25, 0.75]})
             ))
     fig.update_layout(
-        paper_bgcolor="lightgray",
-        height=200,  # Added parameter
+        paper_bgcolor="#E7EBFD",
+        height=250,  # Added parameter
     )
     return fig
 
@@ -71,13 +71,12 @@ def update_graph(value):
     fig = go.Figure(go.Indicator(
     mode = "gauge+number",
     value = mean_critic_score.loc[value, 'critic_score'],
-    #title = {'text': "Speed"},
     domain = {'x': [0, 1], 'y': [0, 1]}
         ))
 
     fig.update_layout(
-        paper_bgcolor="lightgray",
-        height=200,  # Added parameter
+        paper_bgcolor="#E7EBFD",
+        height=250,  # Added parameter
     )
     return fig
 
@@ -91,12 +90,10 @@ def update_graph(value):
             mode = "number+delta",
             value = count_games.loc[value, 'name'],
             delta = {"reference": count_games['name'].max(), "valueformat": ".0f"},
-            #title = {"text": "Users online"},
-            #domain = {'y': [0, 1], 'x': [0.25, 0.75]})
             ))
     fig.update_layout(
-        paper_bgcolor="lightgray",
-        height=200,  # Added parameter
+        paper_bgcolor="#E7EBFD",
+        height=250,
     )
     return fig
 
@@ -106,37 +103,40 @@ def switch_tab(at):
     if at == "tab-1":
         return [
                 dcc.Dropdown(games.platform.unique(), games.platform.unique()[0], id='dropdown0'),
-                dbc.Card(
-                    dbc.CardBody(
-                        [
-                            html.H6("Card subtitle", className="card-subtitle"),
-                            dcc.Graph(id='ind1'),
-                        ]
+                dbc.CardGroup(
+                    [dbc.Card(
+                        dbc.CardBody(
+                            [
+                                html.H6("Cумму продаж платформы и разница с большим", className="card-subtitle"),
+                                dcc.Graph(id='ind1'),
+                            ]
+                        ),
+                        style={"width": "18rem"},
                     ),
-                    style={"width": "18rem"},
-                ),
-                dbc.Card(
-                    dbc.CardBody(
-                        [
-                            html.H6("Card subtitle", className="card-subtitle"),
-                            dcc.Graph(id='ind2'),
-                        ]
+                    dbc.Card(
+                        dbc.CardBody(
+                            [
+                                html.H6("Средняя оценка критиков", className="card-subtitle"),
+                                dcc.Graph(id='ind2'),
+                            ]
+                        ),
+                        style={"width": "18rem"},
                     ),
-                    style={"width": "18rem"},
-                ),
+                    ]),
                 dcc.Graph(id='graph0'),
                 ]
     elif at == "tab-2":
         return  [dcc.Dropdown(games.platform.unique(), games.platform.unique()[0], id='dropdown1'),
-                dbc.Card(
+                dbc.CardGroup(
+                [dbc.Card(
                     dbc.CardBody(
                         [
-                            html.H6("Card subtitle", className="card-subtitle"),
+                            html.H6("Сумма игр на платформе и разница с большим", className="card-subtitle"),
                             dcc.Graph(id='ind3'),
                         ]
                     ),
                     style={"width": "18rem"},
-                ),
+                ),]),
                 dcc.Graph(id='graph1')]
     elif at == "tab-3":
         return  [

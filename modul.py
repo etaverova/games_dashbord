@@ -20,7 +20,7 @@ games_counts = games_counts.rename(columns={"name": "games_count"})
 genre_sales = games.groupby("genre").agg({"na_sales": "sum", "eu_sales": "sum", "jp_sales": "sum", "total_sales": "sum"})
 
 #Cредние продажи по платформам
-mean_sales_of_plat = games.pivot_table(index='platform', values='total_sales', aggfunc='sum')
+sum_sales_of_plat = games.pivot_table(index='platform', values='total_sales', aggfunc='sum')
 
 #Топ самых продаваемых и популярных платформ
 top_platform = (
