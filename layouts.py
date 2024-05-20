@@ -1,11 +1,12 @@
 from dash import html, dcc
-import plotly.express as px
-from data import games, top_platform, games_counts, genre_sales
+#import dash_mantine_components as dmc
+import dash_bootstrap_components as dbc
 
-pie_fig = px.pie(games_counts, values='games_count', names=games_counts.index, title = 'Платформы с большим количеством игр', hole=.2)
-bar_fig = px.bar(genre_sales, x=genre_sales.index, y='total_sales',title = 'Количество продаж по жанрам')
-bar_fig.update_layout(xaxis ={"categoryorder":"total descending"})
 
+from data import games
+from modul import pie_fig, bar_fig
+
+'''
 general_layout = html.Div([
     html.H1(children='Games dashboard', style={'textAlign':'center'}),
     html.H4(children='Сумма продаж каждой платформы по годам', style={'textAlign':'left'}),
@@ -16,3 +17,21 @@ general_layout = html.Div([
     dcc.Graph(figure= pie_fig),
     dcc.Graph(figure= bar_fig),
 ])
+'''
+
+general_layout = html.Div(
+    [
+        html.H1(children='Компьютерные игры', style={'textAlign':'center'}),
+        dbc.Tabs(
+            [
+                dbc.Tab(label="Гистограмма", tab_id="tab-1"),
+                dbc.Tab(label="Линейный график", tab_id="tab-2"),
+                dbc.Tab(label="Круговая диаграмма", tab_id="tab-3"),
+                dbc.Tab(label="Столбчатый график", tab_id="tab-4"),
+            ],
+            id="tabs",
+            active_tab="tab-1",
+        ),
+        html.Div(id="content"),
+    ]
+)
